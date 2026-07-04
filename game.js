@@ -747,11 +747,11 @@ const rat = {
 // ITEM CLASSES (FOOD, MONEY, POWER-UPS)
 // ==========================================
 const ITEM_TYPES = {
-    // Foods (Score +2)
-    CHEESE: { name: 'cheese', score: 2, isMoney: false, color: '#ffcc00' },
-    STRAWBERRY: { name: 'strawberry', score: 2, isMoney: false, color: '#ff2d55' },
-    GRAPE: { name: 'grape', score: 2, isMoney: false, color: '#aa00ff' },
-    GOLDEN_CHEESE: { name: 'golden_cheese', score: 5, isMoney: false, color: '#ffec5c', isSpecial: true },
+    // Foods (Score +5)
+    CHEESE: { name: 'cheese', score: 5, isMoney: false, color: '#ffcc00' },
+    STRAWBERRY: { name: 'strawberry', score: 5, isMoney: false, color: '#ff2d55' },
+    GRAPE: { name: 'grape', score: 5, isMoney: false, color: '#aa00ff' },
+    GOLDEN_CHEESE: { name: 'golden_cheese', score: 10, isMoney: false, color: '#ffec5c', isSpecial: true },
     
     // Power-ups
     FREEZE_BERRY: { name: 'freeze_berry', score: 0, isMoney: false, color: '#00f0ff', isPowerUp: true },
