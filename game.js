@@ -989,8 +989,8 @@ class GameItem {
             // Eating regular food
             let pointsGained = this.type.score;
             score += pointsGained;
-            // Only increase combo if NOT in Fever Mode!
-            if (!feverActive) {
+            // Only increase combo if NOT in Fever Mode and NOT in Cooldown!
+            if (!feverActive && feverCooldownTimer <= 0) {
                 combo++;
                 // TRIGGER FEVER MODE AT 10 COMBO!
                 if (combo >= 10) {
@@ -1406,26 +1406,25 @@ function stopFeverMode() {
     spawnFloatingText(rat.x, rat.y - 80, '⏳ SLOW DOWN!', '#00f0ff');
 }
 
-// Draw golden flashing disco rays during Fever Mode
+// Draw light flashing border during Fever Mode (extremely performant, fixes mobile/emulator lag)
 function drawFeverBgEffects() {
     if (!feverActive) return;
 
     ctx.save();
-    ctx.globalAlpha = 0.08 + Math.sin(globalTime * 0.1) * 0.04;
+    // Pulse alpha
+    const alpha = 0.12 + Math.sin(globalTime * 0.15) * 0.06;
+    
+    // Draw a golden glowing border (vignette)
+    ctx.strokeStyle = '#ffcc00';
+    ctx.lineWidth = 15;
+    ctx.globalAlpha = alpha;
+    ctx.strokeRect(0, 0, canvas.width, canvas.height);
+    
+    // Simple pulsing golden overlay
     ctx.fillStyle = '#ffcc00';
-
-    // Golden flashing radial rays
-    ctx.translate(canvas.width / 2, canvas.height / 2);
-    const numRays = 12;
-    for (let i = 0; i < numRays; i++) {
-        ctx.rotate((Math.PI * 2) / numRays + globalTime * 0.001);
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(-20, -canvas.height);
-        ctx.lineTo(20, -canvas.height);
-        ctx.closePath();
-        ctx.fill();
-    }
+    ctx.globalAlpha = alpha * 0.35;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
     ctx.restore();
 }
 
