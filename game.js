@@ -1540,7 +1540,7 @@ function drawSlapEffect() {
     ctx.translate(slapEffectX, slapEffectY);
     
     // Scale up the tool to make it larger and more prominent!
-    ctx.scale(1.45, 1.45); // 45% larger!
+    ctx.scale(1.9, 1.9); // 90% larger!
     
     // Calculate swing angle (swing down from -60 deg to 0, then retract)
     let swingAngle = 0;
@@ -1553,9 +1553,9 @@ function drawSlapEffect() {
     }
     
     // Pivot rotation point offset (above and to the right of the mouth in scaled space)
-    ctx.translate(22, -30);
+    ctx.translate(16, -21);
     ctx.rotate(swingAngle);
-    ctx.translate(-22, 30); // move back
+    ctx.translate(-16, 21); // move back
     
     // Draw the tool based on selectedSkin
     if (selectedSkin === 'default') {
@@ -1708,12 +1708,12 @@ function drawSlapEffect() {
         ctx.translate(slapEffectX, slapEffectY - 10);
         
         ctx.fillStyle = '#fffc33';
-        ctx.shadowBlur = 12;
+        ctx.shadowBlur = 15;
         ctx.shadowColor = '#fffc33';
         ctx.beginPath();
         for (let i = 0; i < 8; i++) {
             const angle = (i * Math.PI) / 4;
-            const r = i % 2 === 0 ? 18 : 7;
+            const r = i % 2 === 0 ? 24 : 10;
             ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
         }
         ctx.closePath();
