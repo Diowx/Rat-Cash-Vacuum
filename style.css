@@ -831,5 +831,83 @@ body {
     margin-bottom: 0;
 }
 
+/* Money Previews CSS */
+.money-preview-title {
+    font-size: 11px;
+    font-weight: bold;
+    color: #ff3b30;
+    margin-top: 10px;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+
+.money-preview-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 8px 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.money-preview-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.money-preview-item span {
+    font-size: 10px;
+    color: #8c88af;
+    font-weight: 500;
+}
+
+.preview-coin {
+    width: 26px;
+    height: 26px;
+    background: #ffd700;
+    border: 1.5px solid #d4af37;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #b8860b;
+    font-weight: 800;
+    font-size: 13px;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    font-family: 'Fredoka', sans-serif;
+}
+
+.preview-bill {
+    width: 38px;
+    height: 22px;
+    background: #4cd964;
+    border: 1.5px solid #2d993f;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(76, 217, 100, 0.4);
+}
+
+.preview-bill-center {
+    width: 11px;
+    height: 11px;
+    background: #2d993f;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 800;
+    font-size: 8px;
+    font-family: 'Fredoka', sans-serif;
+}
+
 
 
