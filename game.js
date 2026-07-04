@@ -1527,30 +1527,53 @@ function drawParticles() {
 
 // Slap tool/hand block effect
 function drawSlapEffect() {
-    if (!showSlapEffect) return;
+    let drawX = 0;
+    let drawY = 0;
+    let alpha = 1.0;
+    let swingAngle = 0;
 
-    slapEffectTimer--;
-    if (slapEffectTimer <= 0) {
-        showSlapEffect = false;
-        return;
+    if (showSlapEffect) {
+        slapEffectTimer--;
+        if (slapEffectTimer <= 0) {
+            showSlapEffect = false;
+            return;
+        }
+        drawX = slapEffectX;
+        drawY = slapEffectY;
+        alpha = 1.0;
+
+        // Calculate swing angle (swing down from -60 deg to 0, then retract)
+        if (slapEffectTimer > 4) {
+            let t = (10 - slapEffectTimer) / 6; // 0 to 1
+            swingAngle = -Math.PI / 3 * (1 - t); 
+        } else {
+            let t = (4 - slapEffectTimer) / 4; // 0 to 1
+            swingAngle = -Math.PI / 4 * t; 
+        }
+    } else {
+        // Idle ghost stance floating next to mouth
+        if (gameState !== 'playing') return;
+        
+        drawX = rat.getMouthX();
+        drawY = rat.getMouthY();
+        alpha = 0.45; // 45% transparency to prevent visual clutter
+        
+        // Sine wave hover Y offset
+        const hoverOffset = Math.sin(performance.now() * 0.005) * 4;
+        drawY += hoverOffset;
+        
+        // Stationary ready angle
+        swingAngle = -Math.PI / 4;
     }
 
     ctx.save();
+    ctx.globalAlpha = alpha;
+    
     // Translate to the mouth coordinate
-    ctx.translate(slapEffectX, slapEffectY);
+    ctx.translate(drawX, drawY);
     
     // Scale up the tool to make it larger and more prominent!
     ctx.scale(1.9, 1.9); // 90% larger!
-    
-    // Calculate swing angle (swing down from -60 deg to 0, then retract)
-    let swingAngle = 0;
-    if (slapEffectTimer > 4) {
-        let t = (10 - slapEffectTimer) / 6; // 0 to 1
-        swingAngle = -Math.PI / 3 * (1 - t); 
-    } else {
-        let t = (4 - slapEffectTimer) / 4; // 0 to 1
-        swingAngle = -Math.PI / 4 * t; 
-    }
     
     // Pivot rotation point offset (above and to the right of the mouth in scaled space)
     ctx.translate(16, -21);
@@ -1680,7 +1703,7 @@ function drawSlapEffect() {
         
         // Hexagonal glowing shield (Radius increased to 28, centered)
         ctx.save();
-        ctx.globalAlpha = 0.5;
+        ctx.globalAlpha = alpha * 0.5;
         ctx.fillStyle = 'rgba(0, 240, 255, 0.25)';
         ctx.strokeStyle = '#00f0ff';
         ctx.lineWidth = 4; // thicker lines for cyber bar
@@ -1704,7 +1727,7 @@ function drawSlapEffect() {
     ctx.restore();
 
     // Draw comic slap spark impact at the hit frame (frame 4 to 0)
-    if (slapEffectTimer <= 6) {
+    if (showSlapEffect && slapEffectTimer <= 6) {
         ctx.save();
         ctx.translate(slapEffectX, slapEffectY - 10);
         
