@@ -393,7 +393,7 @@ body {
     background: rgba(10, 5, 23, 0.95);
     backdrop-filter: blur(15px);
     justify-content: center;
-    gap: 30px;
+    gap: 15px;
 }
 
 .explosion-emoji {
@@ -907,6 +907,35 @@ body {
     font-weight: 800;
     font-size: 8px;
     font-family: 'Fredoka', sans-serif;
+}
+
+.secondary-btn {
+    border: 2px solid #ff2d85;
+    outline: none;
+    font-family: 'Outfit', sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    color: #ff2d85;
+    background: rgba(255, 45, 133, 0.05);
+    padding: 10px 30px;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(255, 45, 133, 0.15);
+    transition: all 0.2s ease;
+    width: 100%;
+    max-width: 280px;
+    margin-top: 5px;
+    box-sizing: border-box;
+}
+
+.secondary-btn:hover {
+    background: rgba(255, 45, 133, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(255, 45, 133, 0.35);
+}
+
+.secondary-btn:active {
+    transform: translateY(1px);
 }
 
 

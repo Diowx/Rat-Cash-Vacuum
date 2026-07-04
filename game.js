@@ -14,6 +14,7 @@ const gameScreen = document.getElementById('game-screen');
 const gameOverScreen = document.getElementById('game-over-screen');
 const startBtn = document.getElementById('start-btn');
 const restartBtn = document.getElementById('restart-btn');
+const menuBtn = document.getElementById('menu-btn');
 const startHighScoreEl = document.getElementById('start-high-score');
 const finalScoreEl = document.getElementById('final-score');
 const bestScoreEl = document.getElementById('best-score');
@@ -1950,6 +1951,14 @@ document.querySelectorAll('.skin-option').forEach(btn => {
 // Start button clicks
 startBtn.addEventListener('click', startNewGame);
 restartBtn.addEventListener('click', startNewGame);
+menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    sounds.playCoin(); // Play click sound
+    gameOverScreen.classList.remove('active');
+    gameScreen.classList.remove('active');
+    startScreen.classList.add('active');
+    updateHighScoreUI();
+});
 
 // Help modal clicks
 if (helpBtn) {
