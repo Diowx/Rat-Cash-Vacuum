@@ -1552,7 +1552,7 @@ function drawSlapEffect() {
         }
     } else {
         // Idle ghost stance floating next to mouth
-        if (gameState !== 'playing') return;
+        if (!gameActive) return;
         
         drawX = rat.getMouthX();
         drawY = rat.getMouthY();
