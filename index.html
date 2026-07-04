@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Rat Sucker - หนูจอมเขมือบ</title>
+    <!-- Google Fonts for Playful and Premium UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app-container">
+        <!-- Main Game Container simulating a mobile screen -->
+        <div id="game-container">
+            
+            <!-- START SCREEN -->
+            <div id="start-screen" class="overlay active">
+                <div class="logo-container">
+                    <div class="logo-icon">🐭🌀</div>
+                    <h1 class="game-title">RAT CASH<br><span class="highlight">VACUUM</span></h1>
+                </div>
+                <p class="game-description">
+                    หนูจอมเขมือบกางพลังดูดอาหารเข้าปาก!<br>
+                    🍏 กินอาหารเพื่อสะสมแต้ม<br>
+                    ⚠️ ห้ามกิน <span class="money-text">เงิน (เหรียญ/แบงก์)</span> เด็ดขาด!<br>
+                    <span class="instruction-highlight">เคาะหน้าจอเพื่อปิดปากหนู ตบเงินทิ้งไป!</span>
+                </p>
+                <div class="high-score-container">
+                    <span>🏆 HIGH SCORE:</span>
+                    <span id="start-high-score">0</span>
+                </div>
+                
+                <!-- Stage Selector -->
+                <div class="stage-selector-container">
+                    <div class="stage-title-sm">เลือกสถานที่ดูดอาหาร</div>
+                    <div class="stage-options">
+                        <button class="stage-option active" data-stage="void" title="Classic Neon Void">🌌<br>อวกาศ</button>
+                        <button class="stage-option" data-stage="sewer" title="Neon Sewer">🚇<br>ท่อน้ำ</button>
+                        <button class="stage-option" data-stage="kitchen" title="Midnight Kitchen">🍳<br>ห้องครัว</button>
+                        <button class="stage-option" data-stage="cheese" title="Cheese Metropolis">🧀<br>เมืองชีส</button>
+                    </div>
+                </div>
+
+                <!-- Skin Selector -->
+                <div class="skin-selector-container">
+                    <div class="stage-title-sm">แต่งตัวให้น้องหนู</div>
+                    <div class="skin-options">
+                        <button class="skin-option active" data-skin="default" title="Normal Rat">🐭<br>ธรรมดา</button>
+                        <button class="skin-option locked" data-skin="chef" data-unlock="200" title="Chef Rat (Score 200)">👨‍🍳<br>เชฟ (200)</button>
+                        <button class="skin-option locked" data-skin="mafia" data-unlock="500" title="Mafia Rat (Score 500)">😎<br>มาเฟีย (500)</button>
+                        <button class="skin-option locked" data-skin="space" data-unlock="1000" title="Astronaut Rat (Score 1000)">👨‍🚀<br>อวกาศ (1k)</button>
+                    </div>
+                </div>
+
+                <button id="start-btn" class="glow-btn">เริ่มดูดอาหารเลย!</button>
+                <button id="help-btn" class="help-btn">❓ วิธีการเล่น</button>
+            </div>
+
+            <!-- GAME PLAY SCREEN -->
+            <div id="game-screen" class="overlay">
+                <div id="game-ui">
+                    <div class="ui-item">
+                        <div class="ui-label">LV</div>
+                        <div id="level-val" class="ui-value">1</div>
+                    </div>
+                    <div class="ui-item">
+                        <div class="ui-label">SCORE</div>
+                        <div id="score-val" class="ui-value">0</div>
+                    </div>
+                    <div class="ui-item combo-container">
+                        <div class="ui-label">COMBO</div>
+                        <div id="combo-val" class="ui-value">x0</div>
+                    </div>
+                    <div class="ui-item danger-container">
+                        <div class="ui-label">RAT SIZE</div>
+                        <div id="danger-bar" class="danger-bar-wrapper">
+                            <div class="danger-segment" data-segment="1"></div>
+                            <div class="danger-segment" data-segment="2"></div>
+                            <div class="danger-segment" data-segment="3"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mute Button -->
+                <button id="mute-btn" class="audio-btn" title="Toggle Sound">🔊</button>
+
+                <!-- Fever Mode Banner -->
+                <div id="fever-banner">🔥 FEVER MODE 🔥</div>
+
+                <!-- Level Up Banner -->
+                <div id="level-up-banner">⚡ LEVEL UP! ⚡<br><span id="level-up-title" class="highlight">หนูฝึกหัด</span></div>
+
+                <!-- Tutorial Toast -->
+                <div id="tutorial-toast">TAP ANYWHERE TO SLAP/CLOSE MOUTH!</div>
+
+                <!-- Game Canvas -->
+                <canvas id="game-canvas"></canvas>
+            </div>
+
+            <!-- GAME OVER SCREEN -->
+            <div id="game-over-screen" class="overlay">
+                <div class="explosion-emoji">💥🐭💥</div>
+                <h2 class="game-over-title">หนูตัวแตกตาย!</h2>
+                <p id="game-over-reason">เพราะกลืนกินเงินเข้าไปจนตัวระเบิด!</p>
+                
+                <div class="results-container">
+                    <div class="result-row">
+                        <span>คะแนนที่ได้:</span>
+                        <span id="final-score" class="highlight">0</span>
+                    </div>
+                    <div class="result-row">
+                        <span>สถิติสูงสุด:</span>
+                        <span id="best-score">0</span>
+                    </div>
+                </div>
+
+                <button id="restart-btn" class="glow-btn">เล่นอีกครั้ง</button>
+            </div>
+
+            <!-- HELP MODAL OVERLAY -->
+            <div id="help-modal" class="overlay">
+                <div class="help-content">
+                    <h2 class="help-title">❓ วิธีการเล่น (How to Play)</h2>
+                    <div class="help-scroll">
+                        <div class="help-section">
+                            <h3>🎯 เป้าหมายของเกม</h3>
+                            <p>ช่วยน้องหนูเขมือบชีสและอาหารแสนอร่อยเพื่อทำคะแนนคอมโบและเพิ่มเลเวล แต่ <strong>ห้ามกินเงินเด็ดขาด!</strong> เพราะจะทำให้หนูตัวบวมจนตัวแตกตาย!</p>
+                        </div>
+                        <div class="help-section">
+                            <h3>👆 วิธีการควบคุม</h3>
+                            <p><strong>ปล่อยหน้าจอ (อ้าปาก):</strong> น้องหนูจะดูดอาหารที่หล่นลงมาเข้าปากโดยอัตโนมัติ</p>
+                            <p><strong>แตะ/คลิกหน้าจอ (ปิดปากและบล็อก):</strong> หนูจะปิดปากและสะบัดปัดสิ่งของออกไป ใช้สำหรับปัดเงินหรือบล็อกสิ่งกีดขวาง (การปัดเงินจะไม่เสียคอมโบและได้แตะคะแนนพิเศษด้วย!)</p>
+                        </div>
+                        <div class="help-section">
+                            <h3>🌶️ ไอเทมช่วยเหลือ (Power-ups)</h3>
+                            <ul>
+                                <li>❄️ <strong>Freeze Berry:</strong> แช่แข็งเงิน ทำให้ลอยช้าลงมาก</li>
+                                <li>🧲 <strong>Veggie Magnet:</strong> เพิ่มแรงดึงดูดของกินและผลไม้เข้าหาปาก</li>
+                                <li>🌶️ <strong>Super Chili:</strong> ตัวแดงพ่นไฟ เผาทำลายเงินรอบข้างทันที</li>
+                            </ul>
+                        </div>
+                        <div class="help-section">
+                            <h3>🔥 Fever Mode</h3>
+                            <p>กินอาหารสะสมครบ <strong>10 Combo</strong> เข้าสู่โหมดฟีเวอร์! อาหารตกลงมาอย่างรวดเร็ว ได้คะแนนสะสม <strong>คูณ 2 เท่า!</strong> (ช่วงฟีเวอร์คอมโบจะคงที่และไม่เพิ่มขึ้น ป้องกันการฟีเวอร์รัว ๆ)</p>
+                        </div>
+                    </div>
+                    <button id="help-close-btn" class="glow-btn">เข้าใจแล้ว!</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript Game Logic -->
+    <script src="game.js"></script>
+</body>
+</html>
