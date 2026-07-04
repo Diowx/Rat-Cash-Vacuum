@@ -1627,9 +1627,9 @@ function drawSlapEffect() {
         // Suit sleeve (black)
         ctx.fillStyle = '#111';
         ctx.beginPath();
-        ctx.moveTo(40, -40);
+        ctx.moveTo(50, -50);
         ctx.lineTo(25, -25);
-        ctx.lineTo(35, -15);
+        ctx.lineTo(38, -12);
         ctx.closePath();
         ctx.fill();
         
@@ -1637,59 +1637,60 @@ function drawSlapEffect() {
         ctx.fillStyle = '#fff';
         ctx.beginPath();
         ctx.moveTo(25, -25);
-        ctx.lineTo(20, -20);
-        ctx.lineTo(28, -12);
-        ctx.lineTo(33, -17);
+        ctx.lineTo(18, -18);
+        ctx.lineTo(31, -5);
+        ctx.lineTo(38, -12);
         ctx.closePath();
         ctx.fill();
         
-        // Golden Hand
+        // Golden Hand (Radius increased to 13.5)
         ctx.fillStyle = '#ffd700'; 
         ctx.strokeStyle = '#b8860b';
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 2.0;
         ctx.beginPath();
-        ctx.arc(12, -12, 10, 0, Math.PI * 2);
+        ctx.arc(10, -10, 13.5, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
         
-        // Fingers
+        // Fingers (longer & thicker, extending closer to 0,0)
         ctx.beginPath();
-        ctx.ellipse(8, -12, 8, 4, Math.PI / 4, 0, Math.PI * 2);
-        ctx.ellipse(5, -8, 8, 3.5, Math.PI / 4, 0, Math.PI * 2);
-        ctx.ellipse(2, -4, 8, 3.5, Math.PI / 4, 0, Math.PI * 2);
+        ctx.ellipse(6, -11, 11, 4.5, Math.PI / 4, 0, Math.PI * 2);
+        ctx.ellipse(3, -7, 11, 4.0, Math.PI / 4, 0, Math.PI * 2);
+        ctx.ellipse(0, -3, 11, 4.0, Math.PI / 4, 0, Math.PI * 2);
+        ctx.ellipse(10, -2, 7, 3.5, -Math.PI / 6, 0, Math.PI * 2); // thumb
         ctx.fill();
         ctx.stroke();
         
-        // Ruby red ring
+        // Ruby red ring (larger)
         ctx.fillStyle = '#ff3b30'; 
         ctx.beginPath();
-        ctx.arc(5, -8, 2.5, 0, Math.PI * 2);
+        ctx.arc(3, -7, 3.0, 0, Math.PI * 2);
         ctx.fill();
     }
     else if (selectedSkin === 'space') {
         // Cyber energy shield (Cyan glowing hexagon barrier)
-        // Handle grip (black/gray cyber tech)
+        // Handle grip (black/gray cyber tech, slightly longer)
         ctx.fillStyle = '#333';
         ctx.strokeStyle = '#00f0ff';
         ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.rect(15, -25, 10, 10);
+        ctx.rect(18, -25, 12, 12);
         ctx.fill();
         ctx.stroke();
         
-        // Hexagonal glowing shield
+        // Hexagonal glowing shield (Radius increased to 28, centered)
         ctx.save();
-        ctx.globalAlpha = 0.45;
+        ctx.globalAlpha = 0.5;
         ctx.fillStyle = 'rgba(0, 240, 255, 0.25)';
         ctx.strokeStyle = '#00f0ff';
-        ctx.lineWidth = 3;
-        ctx.shadowBlur = 15;
+        ctx.lineWidth = 4; // thicker lines for cyber bar
+        ctx.shadowBlur = 18;
         ctx.shadowColor = '#00f0ff';
         
         ctx.beginPath();
-        const size = 18;
-        const centerX = 5;
-        const centerY = -10;
+        const size = 28;
+        const centerX = 0;
+        const centerY = -5;
         for (let i = 0; i < 6; i++) {
             const angle = (i * Math.PI) / 3;
             ctx.lineTo(centerX + Math.cos(angle) * size, centerY + Math.sin(angle) * size);
