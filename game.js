@@ -265,8 +265,8 @@ class SoundManager {
         osc.type = 'triangle'; // classic retro GameBoy triangle wave
         osc.frequency.setValueAtTime(freq, now);
         
-        // Lower volume so it's unobtrusive
-        const vol = feverActive ? 0.045 : 0.03;
+        // Increased volume to make BGM more exciting and balanced
+        const vol = feverActive ? 0.14 : 0.095;
         gainNode.gain.setValueAtTime(vol, now);
         gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
         
