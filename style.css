@@ -108,7 +108,8 @@ body {
 #start-screen {
     background: radial-gradient(circle at center, #1b133d 0%, #0d0925 100%);
     justify-content: center;
-    gap: 40px;
+    gap: 15px;
+    padding: 30px 20px 20px 20px;
 }
 
 .logo-container {
@@ -216,32 +217,36 @@ body {
     transform: translateY(1px);
 }
 
-.help-btn {
+.help-icon-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(0, 240, 255, 0.08);
     border: 2px solid #00f0ff;
-    outline: none;
-    font-family: 'Outfit', sans-serif;
-    font-weight: bold;
-    font-size: 16px;
     color: #00f0ff;
-    background: rgba(0, 240, 255, 0.05);
-    padding: 12px 30px;
-    border-radius: 25px;
+    font-size: 18px;
+    font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.25);
     transition: all 0.2s ease;
-    width: 100%;
-    max-width: 280px;
-    margin-top: 10px;
+    z-index: 25;
+    outline: none;
 }
 
-.help-btn:hover {
-    background: rgba(0, 240, 255, 0.15);
-    transform: translateY(-2px);
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+.help-icon-btn:hover {
+    background: rgba(0, 240, 255, 0.2);
+    transform: scale(1.08) rotate(15deg);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.45);
 }
 
-.help-btn:active {
-    transform: translateY(1px);
+.help-icon-btn:active {
+    transform: scale(0.95);
 }
 
 /* GAMEPLAY SCREEN SPECIFIC */
