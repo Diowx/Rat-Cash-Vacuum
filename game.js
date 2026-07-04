@@ -329,16 +329,16 @@ let currentLevel = 1;
 let levelUpPauseTimer = 0;
 
 const LEVEL_CONFIGS = {
-    1: { minScore: 0, maxScore: 100, speed: 1.0, interval: 1300, title: '🍼 หนูฝึกหัด' },
-    2: { minScore: 101, maxScore: 250, speed: 1.1, interval: 1220, title: '🧀 นักชิมชีส' },
-    3: { minScore: 251, maxScore: 450, speed: 1.2, interval: 1140, title: '🌀 เครื่องดูดฝุ่น' },
-    4: { minScore: 451, maxScore: 700, speed: 1.3, interval: 1060, title: '🍿 หนูนักดูด' },
-    5: { minScore: 701, maxScore: 1000, speed: 1.4, interval: 980, title: '⚡ พลังเทอร์โบ' },
-    6: { minScore: 1001, maxScore: 1350, speed: 1.5, interval: 900, title: '🌪️ พายุจอมเขมือบ' },
-    7: { minScore: 1351, maxScore: 1750, speed: 1.6, interval: 830, title: '🥇 จ้าวความเร็ว' },
-    8: { minScore: 1751, maxScore: 2200, speed: 1.7, interval: 760, title: '🌟 เขมือบมาราธอน' },
-    9: { minScore: 2201, maxScore: 2999, speed: 1.8, interval: 700, title: '🔥 พายุบ้าคลั่ง' },
-    10: { minScore: 3000, maxScore: Infinity, speed: 2.0, interval: 630, title: '👑 ราชานักดูดไร้ขีดจำกัด' }
+    1: { minScore: 0, maxScore: 50, speed: 1.0, interval: 1300, title: '🍼 หนูฝึกหัด' },
+    2: { minScore: 51, maxScore: 150, speed: 1.1, interval: 1220, title: '🧀 นักชิมชีส' },
+    3: { minScore: 151, maxScore: 300, speed: 1.2, interval: 1140, title: '🌀 เครื่องดูดฝุ่น' },
+    4: { minScore: 301, maxScore: 500, speed: 1.3, interval: 1060, title: '🍿 หนูนักดูด' },
+    5: { minScore: 501, maxScore: 750, speed: 1.4, interval: 980, title: '⚡ พลังเทอร์โบ' },
+    6: { minScore: 751, maxScore: 1100, speed: 1.5, interval: 900, title: '🌪️ พายุจอมเขมือบ' },
+    7: { minScore: 1101, maxScore: 1500, speed: 1.6, interval: 830, title: '🥇 จ้าวความเร็ว' },
+    8: { minScore: 1501, maxScore: 1950, speed: 1.7, interval: 760, title: '🌟 เขมือบมาราธอน' },
+    9: { minScore: 1951, maxScore: 2499, speed: 1.8, interval: 700, title: '🔥 พายุบ้าคลั่ง' },
+    10: { minScore: 2500, maxScore: Infinity, speed: 2.0, interval: 630, title: '👑 ราชานักดูดไร้ขีดจำกัด' }
 };
 
 // Setup canvas size
