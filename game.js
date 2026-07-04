@@ -1872,7 +1872,7 @@ function startNewGame() {
     
     rat.init();
     sounds.init();
-    sounds.startBgm();
+    gameActive = true;
 
     // Spawner timers setup
     spawnInterval = 1300;
@@ -1883,11 +1883,13 @@ function startNewGame() {
     setTimeout(() => {
         tutorialToast.style.opacity = 0;
     }, 3500);
-
-    gameActive = true;
     
     if (sounds.ctx && sounds.ctx.state === 'suspended') {
-        sounds.ctx.resume();
+        sounds.ctx.resume().then(() => {
+            sounds.startBgm();
+        });
+    } else {
+        sounds.startBgm();
     }
 }
 
