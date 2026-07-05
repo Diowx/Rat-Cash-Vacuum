@@ -2067,7 +2067,7 @@ function startCountdownSequence() {
         }
         
         idx++;
-        const delay = stepText === 'READY !!' ? 850 : 650;
+        const delay = 1000; // Count exactly 1 second (1000ms) in real-time for each step
         setTimeout(runNextStep, delay);
     }
     
