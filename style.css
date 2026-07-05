@@ -488,11 +488,11 @@ body {
 }
 
 .stage-option {
-    background: rgba(13, 9, 37, 0.8);
+    background: rgba(13, 9, 37, 0.85);
     border: 2px solid rgba(255, 255, 255, 0.08);
     color: #a49fc4;
-    border-radius: 14px;
-    padding: 6px 2px;
+    border-radius: 16px;
+    padding: 8px 4px;
     font-size: 11px;
     font-weight: bold;
     font-family: 'Fredoka', sans-serif;
@@ -502,8 +502,9 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2px;
+    gap: 6px;
     outline: none;
+    overflow: hidden;
 }
 
 .stage-option:hover {
@@ -512,13 +513,59 @@ body {
     border-color: rgba(255, 255, 255, 0.2);
 }
 
+.stage-preview-img {
+    width: 48px;
+    height: 38px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.2s ease;
+}
+
 .stage-option.active {
-    background: rgba(255, 45, 133, 0.15);
-    color: #fff;
-    border-color: #ff2d85;
-    box-shadow: 0 0 15px rgba(255, 45, 133, 0.4), 
-                inset 0 0 8px rgba(255, 45, 133, 0.2);
     transform: scale(1.05);
+    color: #fff;
+}
+
+/* Custom Neon active glow states for each individual level select theme */
+.stage-option[data-stage="void"].active {
+    background: rgba(255, 45, 133, 0.15);
+    border-color: #ff2d85;
+    box-shadow: 0 0 15px rgba(255, 45, 133, 0.4), inset 0 0 8px rgba(255, 45, 133, 0.2);
+}
+.stage-option[data-stage="void"].active .stage-preview-img {
+    border-color: #ff2d85;
+    box-shadow: 0 0 8px rgba(255, 45, 133, 0.6);
+}
+
+.stage-option[data-stage="sewer"].active {
+    background: rgba(57, 255, 20, 0.15);
+    border-color: #39ff14;
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.4), inset 0 0 8px rgba(57, 255, 20, 0.2);
+}
+.stage-option[data-stage="sewer"].active .stage-preview-img {
+    border-color: #39ff14;
+    box-shadow: 0 0 8px rgba(57, 255, 20, 0.6);
+}
+
+.stage-option[data-stage="kitchen"].active {
+    background: rgba(168, 85, 247, 0.15);
+    border-color: #a855f7;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.4), inset 0 0 8px rgba(168, 85, 247, 0.2);
+}
+.stage-option[data-stage="kitchen"].active .stage-preview-img {
+    border-color: #a855f7;
+    box-shadow: 0 0 8px rgba(168, 85, 247, 0.6);
+}
+
+.stage-option[data-stage="cheese"].active {
+    background: rgba(255, 215, 0, 0.15);
+    border-color: #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4), inset 0 0 8px rgba(255, 215, 0, 0.2);
+}
+.stage-option[data-stage="cheese"].active .stage-preview-img {
+    border-color: #ffd700;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
 }
 
 /* Skin Selector CSS */
