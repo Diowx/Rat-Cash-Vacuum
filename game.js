@@ -2,6 +2,29 @@
 // RAT CASH VACUUM - PREMIUM GAME SYSTEM
 // ==========================================
 
+// ==========================================
+// FIREBASE CLOUD DATABASE SETUP
+// ==========================================
+const firebaseConfig = {
+  apiKey: "AIzaSyB4_8wz9zqTdRmFmIYvdFqQvzwyx1DszDw",
+  authDomain: "rat-cash-vacuum.firebaseapp.com",
+  projectId: "rat-cash-vacuum",
+  storageBucket: "rat-cash-vacuum.appspot.com",
+  messagingSenderId: "247351410090",
+  appId: "1:247351410090:web:7bf7eba3adb27731dffd3",
+  databaseURL: "https://rat-cash-vacuum-default-rtdb.asia-southeast1.firebasedatabase.app/"
+};
+
+let db = null;
+if (typeof firebase !== 'undefined') {
+    try {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.database();
+    } catch (err) {
+        console.error("Firebase init failed: ", err);
+    }
+}
+
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 
@@ -2200,7 +2223,40 @@ if (settingsCloseBtn) {
 // ==========================================
 // 🏆 LOCAL LEADERBOARD LOGIC (TOP 10)
 // ==========================================
+// 🏆 CLOUD LEADERBOARD LOGIC (FIREBASE TOP 10)
+// ==========================================
 function loadLeaderboard() {
+    // If database is available, set up a real-time listener to fetch and sync leaderboard
+    if (db) {
+        db.ref('leaderboard').on('value', (snapshot) => {
+            const raw = snapshot.val();
+            const list = [];
+            if (raw) {
+                for (let key in raw) {
+                    list.push(raw[key]);
+                }
+            }
+            // Sort descending and keep top 10
+            list.sort((a, b) => b.score - a.score);
+            leaderboardData = list.slice(0, 10);
+            
+            // Sync to localstorage as fallback
+            localStorage.setItem('rat_sucker_leaderboard', JSON.stringify(leaderboardData));
+            
+            // If the leaderboard modal is active, refresh the displayed list
+            if (leaderboardModal && leaderboardModal.classList.contains('active')) {
+                displayLeaderboard();
+            }
+        }, (err) => {
+            console.error("Firebase fetch error: ", err);
+            loadLocalLeaderboardFallback();
+        });
+    } else {
+        loadLocalLeaderboardFallback();
+    }
+}
+
+function loadLocalLeaderboardFallback() {
     const raw = localStorage.getItem('rat_sucker_leaderboard');
     if (raw) {
         leaderboardData = JSON.parse(raw);
@@ -2220,11 +2276,12 @@ function saveLeaderboard() {
 
 function displayLeaderboard() {
     leaderboardBody.innerHTML = '';
-    leaderboardData.sort((a, b) => b.score - a.score);
-    leaderboardData = leaderboardData.slice(0, 10);
-    saveLeaderboard();
     
-    if (leaderboardData.length === 0) {
+    // Sort descending and keep top 10
+    leaderboardData.sort((a, b) => b.score - a.score);
+    const top10 = leaderboardData.slice(0, 10);
+    
+    if (top10.length === 0) {
         leaderboardBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#888; padding: 20px 0;">ไม่มีประวัติสถิติคะแนน</td></tr>`;
         return;
     }
@@ -2236,7 +2293,7 @@ function displayLeaderboard() {
         'cheese': '🧀 เมืองชีส'
     };
     
-    leaderboardData.forEach((entry, idx) => {
+    top10.forEach((entry, idx) => {
         const rank = idx + 1;
         let rankClass = '';
         if (rank === 1) rankClass = 'rank-1';
@@ -2291,10 +2348,16 @@ if (nameSubmitBtn) {
             date: dateString
         };
         
-        leaderboardData.push(newEntry);
-        leaderboardData.sort((a, b) => b.score - a.score);
-        leaderboardData = leaderboardData.slice(0, 10);
-        saveLeaderboard();
+        // Push to Firebase online database (it will auto-trigger sync listener)
+        if (db) {
+            db.ref('leaderboard').push(newEntry);
+        } else {
+            // Local fallback
+            leaderboardData.push(newEntry);
+            leaderboardData.sort((a, b) => b.score - a.score);
+            leaderboardData = leaderboardData.slice(0, 10);
+            saveLeaderboard();
+        }
         
         scoreWaitingForLeaderboard = null;
         nameInputModal.classList.remove('active');
@@ -2323,11 +2386,15 @@ if (leaderboardCloseBtn) {
 if (leaderboardResetBtn) {
     leaderboardResetBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (confirm("คุณแน่ใจหรือไม่ว่าต้องการล้างตารางอันดับคะแนนสูงสุดทั้งหมด?")) {
+        if (confirm("คุณแน่ใจหรือไม่ว่าต้องการล้างตารางอันดับคะแนนสูงสุดทั้งหมดบนคลาวด์?")) {
             sounds.playSizeUp();
-            leaderboardData = [];
-            saveLeaderboard();
-            displayLeaderboard();
+            if (db) {
+                db.ref('leaderboard').remove();
+            } else {
+                leaderboardData = [];
+                saveLeaderboard();
+                displayLeaderboard();
+            }
         }
     });
 }
