@@ -70,7 +70,6 @@ const bgmVolumeVal = document.getElementById('bgm-volume-val');
 const leaderboardModal = document.getElementById('leaderboard-modal');
 const leaderboardBtn = document.getElementById('leaderboard-btn');
 const leaderboardCloseBtn = document.getElementById('leaderboard-close-btn');
-const leaderboardResetBtn = document.getElementById('leaderboard-reset-btn');
 const leaderboardBody = document.getElementById('leaderboard-body');
 
 const achievementsModal = document.getElementById('achievements-modal');
@@ -2383,21 +2382,7 @@ if (leaderboardCloseBtn) {
         leaderboardModal.classList.remove('active');
     });
 }
-if (leaderboardResetBtn) {
-    leaderboardResetBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (confirm("คุณแน่ใจหรือไม่ว่าต้องการล้างตารางอันดับคะแนนสูงสุดทั้งหมดบนคลาวด์?")) {
-            sounds.playSizeUp();
-            if (db) {
-                db.ref('leaderboard').remove();
-            } else {
-                leaderboardData = [];
-                saveLeaderboard();
-                displayLeaderboard();
-            }
-        }
-    });
-}
+
 
 // ==========================================
 // 🎖️ LOCAL ACHIEVEMENTS SYSTEM
