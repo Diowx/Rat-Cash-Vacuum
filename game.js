@@ -35,6 +35,41 @@ const introSlides = document.querySelectorAll('.intro-slide');
 const watchIntroBtn = document.getElementById('watch-intro-btn');
 let currentIntroSlide = 1;
 
+// Modals & Action buttons
+const settingsModal = document.getElementById('settings-modal');
+const settingsBtn = document.getElementById('settings-btn');
+const settingsCloseBtn = document.getElementById('settings-close-btn');
+const sfxVolumeSlider = document.getElementById('sfx-volume-slider');
+const sfxVolumeVal = document.getElementById('sfx-volume-val');
+const bgmVolumeSlider = document.getElementById('bgm-volume-slider');
+const bgmVolumeVal = document.getElementById('bgm-volume-val');
+
+const leaderboardModal = document.getElementById('leaderboard-modal');
+const leaderboardBtn = document.getElementById('leaderboard-btn');
+const leaderboardCloseBtn = document.getElementById('leaderboard-close-btn');
+const leaderboardResetBtn = document.getElementById('leaderboard-reset-btn');
+const leaderboardBody = document.getElementById('leaderboard-body');
+
+const achievementsModal = document.getElementById('achievements-modal');
+const achievementsBtn = document.getElementById('achievements-btn');
+const achievementsCloseBtn = document.getElementById('achievements-close-btn');
+const achievementsList = document.getElementById('achievements-list');
+
+const nameInputModal = document.getElementById('name-input-modal');
+const playerNameInput = document.getElementById('player-name-input');
+const nameSubmitBtn = document.getElementById('name-submit-btn');
+
+// Stats and game parameters
+let stats = {
+    totalCheeseEaten: 0,
+    totalMoneyDeflected: 0,
+    maxScoreSpace: 0,
+    maxLevelReached: 0
+};
+let achievementsUnlocked = {};
+let scoreWaitingForLeaderboard = null;
+let leaderboardData = [];
+
 // ==========================================
 // SOUND & BGM MANAGER (Web Audio API Synthesizer)
 // ==========================================
@@ -42,6 +77,8 @@ class SoundManager {
     constructor() {
         this.ctx = null;
         this.muted = false;
+        this.sfxVolume = 0.8;
+        this.bgmVolume = 0.5;
         this.bgmTimeout = null;
         this.bgmTick = 0;
         // Cute 8-bit happy chiptune melody sequence
@@ -70,8 +107,8 @@ class SoundManager {
         osc.frequency.setValueAtTime(160, this.ctx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.12);
         
-        gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.3 * this.sfxVolume, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.01 * this.sfxVolume, this.ctx.currentTime + 0.12);
         
         osc.connect(gain);
         gain.connect(this.ctx.destination);
@@ -90,8 +127,8 @@ class SoundManager {
         osc.frequency.setValueAtTime(750, this.ctx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(1100, this.ctx.currentTime + 0.08);
 
-        gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.2 * this.sfxVolume, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.01 * this.sfxVolume, this.ctx.currentTime + 0.08);
 
         osc.connect(gain);
         gain.connect(this.ctx.destination);
@@ -112,8 +149,8 @@ class SoundManager {
         osc.frequency.setValueAtTime(987.77, now); // B5
         osc.frequency.setValueAtTime(1318.51, now + 0.08); // E6
 
-        gain.gain.setValueAtTime(0.12, now);
-        gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+        gain.gain.setValueAtTime(0.12 * this.sfxVolume, now);
+        gain.gain.linearRampToValueAtTime(0.01 * this.sfxVolume, now + 0.25);
 
         osc.connect(gain);
         gain.connect(this.ctx.destination);
@@ -143,8 +180,8 @@ class SoundManager {
         filter.frequency.exponentialRampToValueAtTime(20, now + 0.9);
 
         const gain = this.ctx.createGain();
-        gain.gain.setValueAtTime(0.5, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.9);
+        gain.gain.setValueAtTime(0.5 * this.sfxVolume, now);
+        gain.gain.exponentialRampToValueAtTime(0.01 * this.sfxVolume, now + 0.9);
 
         noise.connect(filter);
         filter.connect(gain);
@@ -164,8 +201,8 @@ class SoundManager {
         osc.frequency.setValueAtTime(280, this.ctx.currentTime);
         osc.frequency.setValueAtTime(140, this.ctx.currentTime + 0.15);
 
-        gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.35);
+        gain.gain.setValueAtTime(0.2 * this.sfxVolume, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.01 * this.sfxVolume, this.ctx.currentTime + 0.35);
 
         osc.connect(gain);
         gain.connect(this.ctx.destination);
@@ -187,8 +224,8 @@ class SoundManager {
             osc.frequency.setValueAtTime(freq, now + idx * 0.08);
             
             gainNode.gain.setValueAtTime(0, now);
-            gainNode.gain.linearRampToValueAtTime(0.15, now + idx * 0.08 + 0.02);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.25);
+            gainNode.gain.linearRampToValueAtTime(0.15 * this.sfxVolume, now + idx * 0.08 + 0.02);
+            gainNode.gain.exponentialRampToValueAtTime(0.001 * this.sfxVolume, now + idx * 0.08 + 0.25);
             
             osc.connect(gainNode);
             gainNode.connect(this.ctx.destination);
@@ -210,8 +247,8 @@ class SoundManager {
         osc.frequency.setValueAtTime(400, now);
         osc.frequency.exponentialRampToValueAtTime(1200, now + 0.3);
 
-        gain.gain.setValueAtTime(0.18, now);
-        gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+        gain.gain.setValueAtTime(0.18 * this.sfxVolume, now);
+        gain.gain.linearRampToValueAtTime(0.01 * this.sfxVolume, now + 0.3);
 
         osc.connect(gain);
         gain.connect(this.ctx.destination);
@@ -230,8 +267,8 @@ class SoundManager {
         osc.frequency.setValueAtTime(900, this.ctx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.15);
 
-        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.15 * this.sfxVolume, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.01 * this.sfxVolume, this.ctx.currentTime + 0.15);
 
         osc.connect(gain);
         gain.connect(this.ctx.destination);
@@ -272,7 +309,7 @@ class SoundManager {
         osc.frequency.setValueAtTime(freq, now);
         
         // Increased volume to make BGM more exciting and balanced
-        const vol = feverActive ? 0.14 : 0.095;
+        const vol = (feverActive ? 0.14 : 0.095) * this.bgmVolume;
         gainNode.gain.setValueAtTime(vol, now);
         gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
         
@@ -1019,6 +1056,11 @@ class GameItem {
             rat.chewTimer = 16;
             sounds.playChew();
             
+            // Increment statistics
+            stats.totalCheeseEaten++;
+            saveAchievements();
+            checkAchievementsTrigger();
+            
             let color = '#fff';
             let bonusText = `+${pointsGained}`;
             if (this.type.isSpecial) {
@@ -1056,6 +1098,11 @@ class GameItem {
             // Blocked money successfully! Keep combo, no score reward!
             spawnFloatingText(this.x, this.y - 20, '✨ BLOCKED!', '#4cd964');
             sounds.playCoin();
+            
+            // Increment statistics
+            stats.totalMoneyDeflected++;
+            saveAchievements();
+            checkAchievementsTrigger();
         } else {
             // Blocked food (mistake). Reset combo!
             combo = 0;
@@ -1921,6 +1968,19 @@ function triggerGameOver() {
         finalScoreEl.innerText = score;
         updateHighScoreUI();
 
+        // Update Stats & Achievements
+        if (selectedStage === 'void' && score > stats.maxScoreSpace) {
+            stats.maxScoreSpace = score;
+        }
+        if (currentLevel > stats.maxLevelReached) {
+            stats.maxLevelReached = currentLevel;
+        }
+        saveAchievements();
+        checkAchievementsTrigger();
+
+        // Check if Top 10 record and prompt name input
+        checkAndPromptLeaderboard(score);
+
         // Show banner ad on Game Over screen
         if (window.AndroidInterface) {
             window.AndroidInterface.postMessage("show_banner");
@@ -2009,6 +2069,9 @@ if (helpCloseBtn) {
 }
 
 updateHighScoreUI();
+loadVolumeSettings();
+loadLeaderboard();
+loadAchievements();
 
 // ==========================================
 // INTRO COMIC STORY SCREEN LOGIC
@@ -2077,6 +2140,309 @@ if (watchIntroBtn) {
 
 // Check playback on start
 checkIntroPlayback();
+
+// ==========================================
+// 🔊 SETTINGS (VOLUME ADJUSTMENT) LOGIC
+// ==========================================
+function loadVolumeSettings() {
+    const sfxVal = localStorage.getItem('rat_sucker_sfx_volume') !== null ? parseInt(localStorage.getItem('rat_sucker_sfx_volume'), 10) : 80;
+    const bgmVal = localStorage.getItem('rat_sucker_bgm_volume') !== null ? parseInt(localStorage.getItem('rat_sucker_bgm_volume'), 10) : 50;
+    
+    sounds.sfxVolume = sfxVal / 100;
+    sounds.bgmVolume = bgmVal / 100;
+    
+    if (sfxVolumeSlider) {
+        sfxVolumeSlider.value = sfxVal;
+        sfxVolumeVal.innerText = `${sfxVal}%`;
+    }
+    if (bgmVolumeSlider) {
+        bgmVolumeSlider.value = bgmVal;
+        bgmVolumeVal.innerText = `${bgmVal}%`;
+    }
+}
+
+if (sfxVolumeSlider) {
+    sfxVolumeSlider.addEventListener('input', (e) => {
+        const val = e.target.value;
+        sfxVolumeVal.innerText = `${val}%`;
+        sounds.sfxVolume = val / 100;
+        localStorage.setItem('rat_sucker_sfx_volume', val);
+    });
+    sfxVolumeSlider.addEventListener('change', () => {
+        sounds.playChew();
+    });
+}
+
+if (bgmVolumeSlider) {
+    bgmVolumeSlider.addEventListener('input', (e) => {
+        const val = e.target.value;
+        bgmVolumeVal.innerText = `${val}%`;
+        sounds.bgmVolume = val / 100;
+        localStorage.setItem('rat_sucker_bgm_volume', val);
+    });
+}
+
+if (settingsBtn) {
+    settingsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sounds.playCoin();
+        settingsModal.classList.add('active');
+    });
+}
+if (settingsCloseBtn) {
+    settingsCloseBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sounds.playSlap();
+        settingsModal.classList.remove('active');
+    });
+}
+
+// ==========================================
+// 🏆 LOCAL LEADERBOARD LOGIC (TOP 10)
+// ==========================================
+function loadLeaderboard() {
+    const raw = localStorage.getItem('rat_sucker_leaderboard');
+    if (raw) {
+        leaderboardData = JSON.parse(raw);
+    } else {
+        leaderboardData = [
+            { name: "พะโล้", score: 80, stage: "void", skin: "default", date: "05 ก.ค. 12:00" },
+            { name: "ชีสซี่", score: 50, stage: "cheese", skin: "chef", date: "05 ก.ค. 10:00" },
+            { name: "หนูจี๊ด", score: 30, stage: "sewer", skin: "default", date: "05 ก.ค. 09:00" }
+        ];
+        saveLeaderboard();
+    }
+}
+
+function saveLeaderboard() {
+    localStorage.setItem('rat_sucker_leaderboard', JSON.stringify(leaderboardData));
+}
+
+function displayLeaderboard() {
+    leaderboardBody.innerHTML = '';
+    leaderboardData.sort((a, b) => b.score - a.score);
+    leaderboardData = leaderboardData.slice(0, 10);
+    saveLeaderboard();
+    
+    if (leaderboardData.length === 0) {
+        leaderboardBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#888; padding: 20px 0;">ไม่มีประวัติสถิติคะแนน</td></tr>`;
+        return;
+    }
+    
+    const stageEmojis = {
+        'void': '🌌 อวกาศ',
+        'sewer': '🚇 ท่อน้ำ',
+        'kitchen': '🍳 ครัว',
+        'cheese': '🧀 เมืองชีส'
+    };
+    
+    leaderboardData.forEach((entry, idx) => {
+        const rank = idx + 1;
+        let rankClass = '';
+        if (rank === 1) rankClass = 'rank-1';
+        else if (rank === 2) rankClass = 'rank-2';
+        else if (rank === 3) rankClass = 'rank-3';
+        
+        const stageLabel = stageEmojis[entry.stage] || entry.stage;
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="${rankClass}">#${rank}</td>
+            <td>${escapeHtml(entry.name)}</td>
+            <td class="${rankClass}">${entry.score}</td>
+            <td style="font-size: 11px; color:#aaa;">${stageLabel}</td>
+        `;
+        leaderboardBody.appendChild(row);
+    });
+}
+
+function escapeHtml(str) {
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+function checkAndPromptLeaderboard(finalScore) {
+    leaderboardData.sort((a, b) => b.score - a.score);
+    const isTop10 = leaderboardData.length < 10 || finalScore > leaderboardData[leaderboardData.length - 1].score;
+    
+    if (isTop10 && finalScore > 0) {
+        scoreWaitingForLeaderboard = finalScore;
+        playerNameInput.value = localStorage.getItem('rat_sucker_last_player_name') || 'หนูซ่าส์';
+        nameInputModal.classList.add('active');
+        return true;
+    }
+    return false;
+}
+
+if (nameSubmitBtn) {
+    nameSubmitBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const inputName = playerNameInput.value.trim().substring(0, 8) || 'หนูซ่าส์';
+        localStorage.setItem('rat_sucker_last_player_name', inputName);
+        
+        const dateObj = new Date();
+        const months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+        const dateString = `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${String(dateObj.getHours()).padStart(2, '0')}:${String(dateObj.getMinutes()).padStart(2, '0')}`;
+        
+        const newEntry = {
+            name: inputName,
+            score: scoreWaitingForLeaderboard,
+            stage: selectedStage,
+            skin: selectedSkin,
+            date: dateString
+        };
+        
+        leaderboardData.push(newEntry);
+        leaderboardData.sort((a, b) => b.score - a.score);
+        leaderboardData = leaderboardData.slice(0, 10);
+        saveLeaderboard();
+        
+        scoreWaitingForLeaderboard = null;
+        nameInputModal.classList.remove('active');
+        
+        sounds.playLevelUp();
+        displayLeaderboard();
+        leaderboardModal.classList.add('active');
+    });
+}
+
+if (leaderboardBtn) {
+    leaderboardBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sounds.playCoin();
+        displayLeaderboard();
+        leaderboardModal.classList.add('active');
+    });
+}
+if (leaderboardCloseBtn) {
+    leaderboardCloseBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sounds.playSlap();
+        leaderboardModal.classList.remove('active');
+    });
+}
+if (leaderboardResetBtn) {
+    leaderboardResetBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (confirm("คุณแน่ใจหรือไม่ว่าต้องการล้างตารางอันดับคะแนนสูงสุดทั้งหมด?")) {
+            sounds.playSizeUp();
+            leaderboardData = [];
+            saveLeaderboard();
+            displayLeaderboard();
+        }
+    });
+}
+
+// ==========================================
+// 🎖️ LOCAL ACHIEVEMENTS SYSTEM
+// ==========================================
+const achievementsConfig = [
+    {
+        id: "cheese_gobbler",
+        title: "🧀 จอมเขมือบชีส",
+        desc: "กินชีสสะสมครบ 100 ชิ้นขึ้นไป (ทุกรอบรวมกัน)",
+        check: () => stats.totalCheeseEaten >= 100
+    },
+    {
+        id: "money_dodger",
+        title: "💸 เครื่องสะบัดเหรียญ",
+        desc: "แตะปัดเงิน/เหรียญทองทิ้งครบ 50 ครั้งขึ้นไป",
+        check: () => stats.totalMoneyDeflected >= 50
+    },
+    {
+        id: "space_explorer",
+        title: "🚀 หนูอวกาศ",
+        desc: "ทำคะแนนถึง 100 แต้มขึ้นไปในด่านอวกาศ",
+        check: () => stats.maxScoreSpace >= 100
+    },
+    {
+        id: "doctor_level_5",
+        title: "🧪 หนูวิทยาศาสตร์",
+        desc: "เก็บค่าเติบโตถึงระดับ Level 5 ในการเล่นรอบเดียว",
+        check: () => stats.maxLevelReached >= 5
+    }
+];
+
+function loadAchievements() {
+    const rawStats = localStorage.getItem('rat_sucker_stats');
+    if (rawStats) stats = JSON.parse(rawStats);
+    
+    const rawAch = localStorage.getItem('rat_sucker_achievements');
+    if (rawAch) achievementsUnlocked = JSON.parse(rawAch);
+}
+
+function saveAchievements() {
+    localStorage.setItem('rat_sucker_stats', JSON.stringify(stats));
+    localStorage.setItem('rat_sucker_achievements', JSON.stringify(achievementsUnlocked));
+}
+
+function checkAchievementsTrigger() {
+    achievementsConfig.forEach(ach => {
+        if (!achievementsUnlocked[ach.id] && ach.check()) {
+            achievementsUnlocked[ach.id] = true;
+            saveAchievements();
+            showAchievementToast(ach);
+        }
+    });
+}
+
+function showAchievementToast(ach) {
+    sounds.playLevelUp();
+    
+    const toast = document.createElement('div');
+    toast.className = 'achievement-toast';
+    toast.innerHTML = `
+        <div class="toast-icon">🎖️</div>
+        <div class="toast-info">
+            <p class="toast-title">ความสำเร็จใหม่!</p>
+            <p class="toast-name">${ach.title}</p>
+        </div>
+    `;
+    
+    gameContainer.appendChild(toast);
+    
+    setTimeout(() => toast.classList.add('show'), 100);
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 600);
+    }, 4000);
+}
+
+function displayAchievements() {
+    achievementsList.innerHTML = '';
+    
+    achievementsConfig.forEach(ach => {
+        const isUnlocked = !!achievementsUnlocked[ach.id];
+        
+        const card = document.createElement('div');
+        card.className = `achievement-card ${isUnlocked ? '' : 'locked'}`;
+        card.innerHTML = `
+            <div class="achievement-icon">${isUnlocked ? '🎖️' : '🔒'}</div>
+            <div class="achievement-info">
+                <p class="achievement-title">${ach.title}</p>
+                <p class="achievement-desc">${ach.desc}</p>
+            </div>
+            <div class="achievement-status">${isUnlocked ? 'สำเร็จแล้ว' : 'ยังไม่ปลดล็อก'}</div>
+        `;
+        achievementsList.appendChild(card);
+    });
+}
+
+if (achievementsBtn) {
+    achievementsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sounds.playCoin();
+        displayAchievements();
+        achievementsModal.classList.add('active');
+    });
+}
+if (achievementsCloseBtn) {
+    achievementsCloseBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sounds.playSlap();
+        achievementsModal.classList.remove('active');
+    });
+}
 
 // ==========================================
 // BACKGROUND STAGES DRAWING LOGIC

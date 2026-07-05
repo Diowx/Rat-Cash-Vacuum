@@ -1079,5 +1079,343 @@ body {
     padding: 8px 15px;
 }
 
+/* ==========================================
+   TOP ACTIONS BAR STYLES
+   ========================================== */
+.top-actions-container {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 10px;
+    z-index: 25;
+}
+
+.action-circle-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(0, 240, 255, 0.08);
+    border: 2px solid #00f0ff;
+    color: #00f0ff;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    outline: none;
+}
+
+.action-circle-btn:hover {
+    background: rgba(0, 240, 255, 0.2);
+    transform: scale(1.1) rotate(8deg);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.45);
+}
+
+.action-circle-btn:active {
+    transform: scale(0.92);
+}
+
+/* Specific buttons colors to make them look premium */
+#leaderboard-btn {
+    border-color: #ffd700;
+    color: #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.25);
+}
+#leaderboard-btn:hover {
+    background: rgba(255, 215, 0, 0.15);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.45);
+}
+
+#achievements-btn {
+    border-color: #ff2d85;
+    color: #ff2d85;
+    box-shadow: 0 0 15px rgba(255, 45, 133, 0.25);
+}
+#achievements-btn:hover {
+    background: rgba(255, 45, 133, 0.15);
+    box-shadow: 0 0 20px rgba(255, 45, 133, 0.45);
+}
+
+#settings-btn {
+    border-color: #a855f7;
+    color: #a855f7;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.25);
+}
+#settings-btn:hover {
+    background: rgba(168, 85, 247, 0.15);
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.45);
+}
+
+/* ==========================================
+   SETTINGS MODAL STYLES
+   ========================================== */
+.settings-scroll {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    margin: 15px 0;
+}
+
+.settings-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+}
+
+.settings-label {
+    color: #b9b6d3;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Fredoka', sans-serif;
+}
+
+.slider-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+}
+
+.volume-slider {
+    flex: 1;
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    outline: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #00f0ff;
+    border: 2px solid #fff;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+    transition: transform 0.1s ease;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+}
+
+.volume-val {
+    color: #00f0ff;
+    font-family: 'Outfit', sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    width: 45px;
+    text-align: right;
+}
+
+/* ==========================================
+   LEADERBOARD MODAL STYLES
+   ========================================== */
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    text-align: left;
+    font-family: 'Outfit', sans-serif;
+}
+
+.leaderboard-table th {
+    color: #ff2d85;
+    font-size: 12px;
+    text-transform: uppercase;
+    padding: 10px 8px;
+    border-bottom: 2px solid rgba(255, 45, 133, 0.25);
+    font-weight: 800;
+}
+
+.leaderboard-table td {
+    padding: 12px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: #e2e1ec;
+    font-size: 13px;
+}
+
+.leaderboard-table tr:hover td {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Highlight top 3 ranks */
+.rank-1 { color: #ffd700 !important; font-weight: bold; }
+.rank-2 { color: #c0c0c0 !important; font-weight: bold; }
+.rank-3 { color: #cd7f32 !important; font-weight: bold; }
+
+/* ==========================================
+   ACHIEVEMENTS MODAL STYLES
+   ========================================== */
+.achievement-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.achievement-card.locked {
+    opacity: 0.55;
+    background: rgba(255, 255, 255, 0.01);
+    border-color: rgba(255, 255, 255, 0.03);
+}
+
+.achievement-card.locked .achievement-icon {
+    filter: grayscale(1);
+    transform: scale(0.9);
+}
+
+.achievement-icon {
+    font-size: 32px;
+    transition: transform 0.3s ease;
+}
+
+.achievement-info {
+    flex: 1;
+    text-align: left;
+}
+
+.achievement-title {
+    margin: 0;
+    color: #e2e1ec;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: 'Fredoka', sans-serif;
+}
+
+.achievement-desc {
+    margin: 3px 0 0 0;
+    color: #8a889e;
+    font-size: 11.5px;
+    line-height: 1.4;
+}
+
+.achievement-status {
+    font-size: 12px;
+    font-weight: bold;
+    color: #ff2d85;
+}
+
+.achievement-card:not(.locked) {
+    border-color: rgba(0, 240, 255, 0.25);
+    background: rgba(0, 240, 255, 0.02);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.05);
+}
+
+.achievement-card:not(.locked) .achievement-status {
+    color: #00f0ff;
+}
+
+/* ==========================================
+   POPUP INPUT FOR TOP 10 NAME ENTRY
+   ========================================== */
+.popup-content {
+    background: radial-gradient(circle at center, #2b135c 0%, #0d0620 100%) !important;
+    border: 3px solid #ff2d85 !important;
+    box-shadow: 0 0 35px rgba(255, 45, 133, 0.5) !important;
+    padding: 30px 25px !important;
+    animation: popupPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popupPop {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.popup-title {
+    color: #ffd700 !important;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.5) !important;
+}
+
+.popup-desc {
+    color: #e2e1ec;
+    font-size: 13.5px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.text-input {
+    width: 80%;
+    max-width: 250px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 45, 133, 0.4);
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 12px;
+    text-align: center;
+    font-family: 'Fredoka', sans-serif;
+    outline: none;
+    margin-bottom: 20px;
+    transition: all 0.2s ease;
+}
+
+.text-input:focus {
+    border-color: #ff2d85;
+    box-shadow: 0 0 15px rgba(255, 45, 133, 0.3);
+}
+
+/* Custom Achievements Toast notifications */
+.achievement-toast {
+    position: absolute;
+    bottom: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(13, 6, 32, 0.95);
+    border: 2px solid #00f0ff;
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
+    border-radius: 20px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 200;
+    width: 80%;
+    max-width: 300px;
+    transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.achievement-toast.show {
+    bottom: 30px;
+}
+
+.toast-icon {
+    font-size: 28px;
+}
+
+.toast-info {
+    flex: 1;
+    text-align: left;
+}
+
+.toast-title {
+    margin: 0;
+    color: #ffd700;
+    font-size: 13.5px;
+    font-weight: bold;
+    font-family: 'Fredoka', sans-serif;
+}
+
+.toast-name {
+    margin: 3px 0 0 0;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+}
+
 
 

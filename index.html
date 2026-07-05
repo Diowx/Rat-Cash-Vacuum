@@ -51,8 +51,13 @@
             
             <!-- START SCREEN -->
             <div id="start-screen" class="overlay active">
-                <!-- Floating Help Button -->
-                <button id="help-btn" class="help-icon-btn" title="วิธีการเล่น">❓</button>
+                <!-- Top Actions Bar -->
+                <div class="top-actions-container">
+                    <button id="leaderboard-btn" class="action-circle-btn" title="ตารางอันดับ">🏆</button>
+                    <button id="achievements-btn" class="action-circle-btn" title="ความสำเร็จ">🎖️</button>
+                    <button id="settings-btn" class="action-circle-btn" title="ตั้งค่า">⚙️</button>
+                    <button id="help-btn" class="action-circle-btn" title="วิธีการเล่น">❓</button>
+                </div>
 
                 <div class="logo-container">
                     <div class="logo-icon">🐭🌀</div>
@@ -202,6 +207,77 @@
                         <button id="help-close-btn" class="glow-btn">เข้าใจแล้ว!</button>
                         <button id="watch-intro-btn" class="secondary-btn">ชมการ์ตูนเริ่มต้น 📖</button>
                     </div>
+                </div>
+            </div>
+
+            <!-- SETTINGS MODAL -->
+            <div id="settings-modal" class="overlay">
+                <div class="help-content">
+                    <h2 class="help-title">⚙️ ตั้งค่า (Settings)</h2>
+                    <div class="settings-scroll">
+                        <div class="settings-group">
+                            <label class="settings-label">🔊 เสียงเอฟเฟกต์ (SFX Volume)</label>
+                            <div class="slider-row">
+                                <input type="range" id="sfx-volume-slider" min="0" max="100" value="80" class="volume-slider">
+                                <span id="sfx-volume-val" class="volume-val">80%</span>
+                            </div>
+                        </div>
+                        <div class="settings-group">
+                            <label class="settings-label">🎵 เพลงประกอบ (BGM Volume)</label>
+                            <div class="slider-row">
+                                <input type="range" id="bgm-volume-slider" min="0" max="100" value="50" class="volume-slider">
+                                <span id="bgm-volume-val" class="volume-val">50%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="settings-close-btn" class="glow-btn">ตกลง</button>
+                </div>
+            </div>
+
+            <!-- LEADERBOARD MODAL -->
+            <div id="leaderboard-modal" class="overlay">
+                <div class="help-content">
+                    <h2 class="help-title">🏆 อันดับสูงสุด (Top 10)</h2>
+                    <div class="help-scroll">
+                        <table class="leaderboard-table">
+                            <thead>
+                                <tr>
+                                    <th>อันดับ</th>
+                                    <th>ผู้เล่น</th>
+                                    <th>คะแนน</th>
+                                    <th>ด่าน</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboard-body">
+                                <!-- Dynamically filled by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="help-action-row">
+                        <button id="leaderboard-close-btn" class="glow-btn">ปิด</button>
+                        <button id="leaderboard-reset-btn" class="secondary-btn">รีเซ็ต 🔄</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACHIEVEMENTS MODAL -->
+            <div id="achievements-modal" class="overlay">
+                <div class="help-content">
+                    <h2 class="help-title">🎖️ เกียรติยศ (Achievements)</h2>
+                    <div class="help-scroll" id="achievements-list">
+                        <!-- Dynamically filled by JS -->
+                    </div>
+                    <button id="achievements-close-btn" class="glow-btn">ปิด</button>
+                </div>
+            </div>
+
+            <!-- NAME INPUT DIALOG -->
+            <div id="name-input-modal" class="overlay">
+                <div class="help-content popup-content">
+                    <h2 class="help-title popup-title">🎉 สถิติใหม่! 🎉</h2>
+                    <p class="popup-desc">ยินดีด้วยคะแนนของคุณติดอันดับ Top 10!<br>กรุณาป้อนชื่อของคุณเพื่อจารึก:</p>
+                    <input type="text" id="player-name-input" maxlength="8" placeholder="ชื่อของคุณ" class="text-input" value="หนูซ่าส์">
+                    <button id="name-submit-btn" class="glow-btn">ตกลง 💾</button>
                 </div>
             </div>
 
