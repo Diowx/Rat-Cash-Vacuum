@@ -2024,7 +2024,7 @@ function startCountdownSequence() {
     countdownActive = true;
     countdownOverlay.classList.add('active');
     
-    const sequence = ['READY !!', '3', '2', '1', 'GO !!!'];
+    const sequence = ['READY!', '3', '2', '1', 'GO !!!'];
     let idx = 0;
     
     function runNextStep() {
@@ -2047,7 +2047,7 @@ function startCountdownSequence() {
         
         // Update styling classes
         countdownText.className = 'countdown-text'; // clear all classes
-        if (stepText === 'READY !!') {
+        if (stepText === 'READY!') {
             countdownText.classList.add('ready');
             sounds.playCountdownBeep('ready');
         } else if (stepText === '3') {

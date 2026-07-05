@@ -1441,11 +1441,12 @@ body {
 
 .countdown-text {
     font-family: 'Outfit', 'Fredoka', sans-serif;
-    font-size: 82px;
+    font-size: 64px; /* Slightly reduced font size to fit mobile screens perfectly */
     font-weight: 900;
     text-transform: uppercase;
     animation: countdownPulse 0.45s ease-out infinite alternate;
     transition: all 0.2s ease;
+    white-space: nowrap; /* Prevent line wrapping under any circumstances */
 }
 
 /* Pulsing text size animation */
