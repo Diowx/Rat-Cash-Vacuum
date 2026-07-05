@@ -441,16 +441,16 @@ let currentLevel = 1;
 let levelUpPauseTimer = 0;
 
 const LEVEL_CONFIGS = {
-    1: { minScore: 0, maxScore: 50, speed: 1.0, interval: 1300, title: '🍼 หนูฝึกหัด' },
-    2: { minScore: 51, maxScore: 150, speed: 1.1, interval: 1220, title: '🧀 นักชิมชีส' },
-    3: { minScore: 151, maxScore: 300, speed: 1.2, interval: 1140, title: '🌀 เครื่องดูดฝุ่น' },
-    4: { minScore: 301, maxScore: 500, speed: 1.3, interval: 1060, title: '🍿 หนูนักดูด' },
-    5: { minScore: 501, maxScore: 750, speed: 1.4, interval: 980, title: '⚡ พลังเทอร์โบ' },
-    6: { minScore: 751, maxScore: 1100, speed: 1.5, interval: 900, title: '🌪️ พายุจอมเขมือบ' },
-    7: { minScore: 1101, maxScore: 1500, speed: 1.6, interval: 830, title: '🥇 จ้าวความเร็ว' },
-    8: { minScore: 1501, maxScore: 1950, speed: 1.7, interval: 760, title: '🌟 เขมือบมาราธอน' },
-    9: { minScore: 1951, maxScore: 2499, speed: 1.8, interval: 700, title: '🔥 พายุบ้าคลั่ง' },
-    10: { minScore: 2500, maxScore: Infinity, speed: 2.0, interval: 630, title: '👑 ราชานักดูดไร้ขีดจำกัด' }
+    1: { minScore: 0, maxScore: 40, speed: 1.1, interval: 1100, title: '🍼 หนูฝึกหัด' },
+    2: { minScore: 41, maxScore: 120, speed: 1.2, interval: 1000, title: '🧀 นักชิมชีส' },
+    3: { minScore: 121, maxScore: 260, speed: 1.3, interval: 920, title: '🌀 เครื่องดูดฝุ่น' },
+    4: { minScore: 261, maxScore: 500, speed: 1.4, interval: 850, title: '🍿 หนูนักดูด' },
+    5: { minScore: 501, maxScore: 750, speed: 1.48, interval: 800, title: '⚡ พลังเทอร์โบ' },
+    6: { minScore: 751, maxScore: 1100, speed: 1.56, interval: 760, title: '🌪️ พายุจอมเขมือบ' },
+    7: { minScore: 1101, maxScore: 1500, speed: 1.65, interval: 720, title: '🥇 จ้าวความเร็ว' },
+    8: { minScore: 1501, maxScore: 1950, speed: 1.75, interval: 680, title: '🌟 เขมือบมาราธอน' },
+    9: { minScore: 1951, maxScore: 2499, speed: 1.85, interval: 640, title: '🔥 พายุบ้าคลั่ง' },
+    10: { minScore: 2500, maxScore: Infinity, speed: 2.05, interval: 580, title: '👑 ราชานักดูดไร้ขีดจำกัด' }
 };
 
 // PRELOAD 2D CARTOON STAGE BACKGROUND IMAGES
@@ -931,12 +931,19 @@ class GameItem {
             const rand = Math.random();
             
             // Adjust money spawn rate based on level to increase difficulty
-            let moneyThreshold = 0.70; // Default: 30% money chance (rand >= 0.70)
+            let moneyThreshold = 0.60; // Level 1-2: 40% money chance (rand >= 0.60)
             if (currentLevel >= 8) {
-                moneyThreshold = 0.58; // 42% money chance at Level 8-10
-            } else if (currentLevel >= 5) {
-                moneyThreshold = 0.64; // 36% money chance at Level 5-7
+                moneyThreshold = 0.45; // Level 8+: 55% money chance
+            } else if (currentLevel >= 6) {
+                moneyThreshold = 0.50; // Level 6-7: 50% money chance
+            } else if (currentLevel >= 4) {
+                moneyThreshold = 0.54; // Level 4-5: 46% money chance
+            } else if (currentLevel >= 3) {
+                moneyThreshold = 0.57; // Level 3: 43% money chance
             }
+            
+            // Disable power-ups on Level 1 to prevent idling cheats and teach mechanics
+            const isLevel1 = (currentLevel === 1);
             
             if (rand < moneyThreshold * 0.785) {
                 // Regular food
@@ -949,15 +956,15 @@ class GameItem {
                 // Special Golden Cheese
                 this.type = ITEM_TYPES.GOLDEN_CHEESE;
             } 
-            else if (rand < moneyThreshold) {
-                // Power-up items
+            else if (rand < moneyThreshold && !isLevel1) {
+                // Power-up items (Only spawn if NOT Level 1)
                 const pwRand = Math.random();
                 if (pwRand < 0.33) this.type = ITEM_TYPES.FREEZE_BERRY;
                 else if (pwRand < 0.66) this.type = ITEM_TYPES.MAGNET;
                 else this.type = ITEM_TYPES.CHILI;
             } 
             else {
-                // Money items (Avoid!)
+                // Money items (Avoid!) - Falls back here for power-up range on Level 1
                 const moneyRand = Math.random();
                 this.type = (moneyRand < 0.65) ? ITEM_TYPES.COIN : ITEM_TYPES.BILL;
             }
