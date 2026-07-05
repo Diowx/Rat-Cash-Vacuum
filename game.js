@@ -28,6 +28,12 @@ const levelUpTitle = document.getElementById('level-up-title');
 const helpBtn = document.getElementById('help-btn');
 const helpModal = document.getElementById('help-modal');
 const helpCloseBtn = document.getElementById('help-close-btn');
+const introScreen = document.getElementById('intro-screen');
+const introSkipBtn = document.getElementById('intro-skip-btn');
+const introNextBtn = document.getElementById('intro-next-btn');
+const introSlides = document.querySelectorAll('.intro-slide');
+const watchIntroBtn = document.getElementById('watch-intro-btn');
+let currentIntroSlide = 1;
 
 // ==========================================
 // SOUND & BGM MANAGER (Web Audio API Synthesizer)
@@ -2003,6 +2009,74 @@ if (helpCloseBtn) {
 }
 
 updateHighScoreUI();
+
+// ==========================================
+// INTRO COMIC STORY SCREEN LOGIC
+// ==========================================
+function showIntroSlide(slideNum) {
+    introSlides.forEach(slide => {
+        slide.classList.remove('active');
+        if (parseInt(slide.dataset.slide, 10) === slideNum) {
+            slide.classList.add('active');
+        }
+    });
+    currentIntroSlide = slideNum;
+    if (currentIntroSlide === 3) {
+        introNextBtn.innerText = 'เริ่มกินชีสกันเลย! 🧀';
+    } else {
+        introNextBtn.innerText = 'ถัดไป ➡️';
+    }
+}
+
+function handleIntroNext() {
+    sounds.playCoin(); // Play click sound
+    if (currentIntroSlide < 3) {
+        showIntroSlide(currentIntroSlide + 1);
+    } else {
+        finishIntro();
+    }
+}
+
+function finishIntro() {
+    localStorage.setItem('rat_sucker_seen_intro', 'true');
+    introScreen.classList.remove('active');
+    startScreen.classList.add('active');
+    sounds.playLevelUp(); // Happy start fanfare sound!
+}
+
+function startManualIntro() {
+    sounds.playCoin();
+    if (helpModal) helpModal.classList.remove('active');
+    startScreen.classList.remove('active');
+    introScreen.classList.add('active');
+    showIntroSlide(1);
+}
+
+function checkIntroPlayback() {
+    const hasSeenIntro = localStorage.getItem('rat_sucker_seen_intro');
+    if (!hasSeenIntro) {
+        introScreen.classList.add('active');
+        startScreen.classList.remove('active');
+        currentIntroSlide = 1;
+        showIntroSlide(1);
+    } else {
+        introScreen.classList.remove('active');
+        startScreen.classList.add('active');
+    }
+}
+
+// Bind Intro Click events
+introNextBtn.addEventListener('click', handleIntroNext);
+introSkipBtn.addEventListener('click', () => {
+    sounds.playSlap();
+    finishIntro();
+});
+if (watchIntroBtn) {
+    watchIntroBtn.addEventListener('click', startManualIntro);
+}
+
+// Check playback on start
+checkIntroPlayback();
 
 // ==========================================
 // BACKGROUND STAGES DRAWING LOGIC

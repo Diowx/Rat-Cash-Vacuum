@@ -15,6 +15,38 @@
         <!-- Main Game Container simulating a mobile screen -->
         <div id="game-container">
             
+            <!-- INTRO STORY SCREEN -->
+            <div id="intro-screen" class="overlay">
+                <button id="intro-skip-btn" class="skip-btn">ข้าม ⏭️</button>
+                <div class="intro-slides-container">
+                    <!-- Slide 1 -->
+                    <div class="intro-slide active" data-slide="1">
+                        <img src="splash_1.png" alt="น้องหนูหิวโหย" class="intro-img">
+                        <div class="intro-text-box">
+                            <h3>บทที่ 1: หนูผู้หิวโซ</h3>
+                            <p>น้องหนูจอมเขมือบหิวโซ คอยอ้าปากรออาหารหล่นจากฟากฟ้า!</p>
+                        </div>
+                    </div>
+                    <!-- Slide 2 -->
+                    <div class="intro-slide" data-slide="2">
+                        <img src="splash_2.png" alt="เศษเงินตกมา" class="intro-img">
+                        <div class="intro-text-box">
+                            <h3>บทที่ 2: ระวังเศษเงิน!</h3>
+                            <p>แต่ระวังให้ดี! มีเหรียญทองและธนบัตรหล่นปะปนลงมาด้วย!</p>
+                        </div>
+                    </div>
+                    <!-- Slide 3 -->
+                    <div class="intro-slide" data-slide="3">
+                        <img src="splash_3.png" alt="ท้องแตกตาย" class="intro-img">
+                        <div class="intro-text-box">
+                            <h3>บทที่ 3: ห้ามกินเงิน!</h3>
+                            <p>ห้ามกินเงินเด็ดขาด! ท้องจะระเบิดตัวแตกตาย! เคาะหน้าจอเพื่อปิดปากตบเงินทิ้งไป!</p>
+                        </div>
+                    </div>
+                </div>
+                <button id="intro-next-btn" class="glow-btn">ถัดไป ➡️</button>
+            </div>
+            
             <!-- START SCREEN -->
             <div id="start-screen" class="overlay active">
                 <!-- Floating Help Button -->
@@ -164,7 +196,10 @@
                             <p>กินอาหารสะสมครบ <strong>10 Combo</strong> เข้าสู่โหมดฟีเวอร์! อาหารตกลงมาอย่างรวดเร็ว ได้คะแนนสะสม <strong>คูณ 2 เท่า!</strong> (ช่วงฟีเวอร์คอมโบจะคงที่และไม่เพิ่มขึ้น ป้องกันการฟีเวอร์รัว ๆ)</p>
                         </div>
                     </div>
-                    <button id="help-close-btn" class="glow-btn">เข้าใจแล้ว!</button>
+                    <div class="help-action-row">
+                        <button id="help-close-btn" class="glow-btn">เข้าใจแล้ว!</button>
+                        <button id="watch-intro-btn" class="secondary-btn">ชมการ์ตูนเริ่มต้น 📖</button>
+                    </div>
                 </div>
             </div>
 
