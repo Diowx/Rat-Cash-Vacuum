@@ -453,6 +453,18 @@ const LEVEL_CONFIGS = {
     10: { minScore: 2500, maxScore: Infinity, speed: 2.0, interval: 630, title: '👑 ราชานักดูดไร้ขีดจำกัด' }
 };
 
+// PRELOAD 2D CARTOON STAGE BACKGROUND IMAGES
+const stageBgImages = {
+    void: new Image(),
+    sewer: new Image(),
+    kitchen: new Image(),
+    cheese: new Image()
+};
+stageBgImages.void.src = 'stage_void.png';
+stageBgImages.sewer.src = 'stage_sewer.png';
+stageBgImages.kitchen.src = 'stage_kitchen.png';
+stageBgImages.cheese.src = 'stage_cheese.png';
+
 // Setup canvas size
 function resizeCanvas() {
     canvas.width = gameContainer.clientWidth;
@@ -2601,6 +2613,28 @@ if (achievementsCloseBtn) {
 // BACKGROUND STAGES DRAWING LOGIC
 // ==========================================
 function drawStageBackground() {
+    const bgImg = stageBgImages[selectedStage];
+    if (bgImg && bgImg.complete && bgImg.naturalWidth !== 0) {
+        // Draw 2D cartoon level image covering full screen
+        ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+        
+        // Apply custom themed dark overlay tint so game items stand out clearly
+        if (selectedStage === 'void') {
+            ctx.fillStyle = 'rgba(8, 5, 23, 0.81)';
+        } else if (selectedStage === 'sewer') {
+            ctx.fillStyle = 'rgba(5, 12, 8, 0.82)';
+        } else if (selectedStage === 'kitchen') {
+            ctx.fillStyle = 'rgba(8, 7, 20, 0.81)';
+        } else if (selectedStage === 'cheese') {
+            ctx.fillStyle = 'rgba(16, 9, 4, 0.82)';
+        } else {
+            ctx.fillStyle = 'rgba(8, 5, 23, 0.81)';
+        }
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        return; // Skip vector fallbacks
+    }
+
+    // FALLBACKS (If image hasn't loaded yet)
     if (selectedStage === 'void') {
         const grad = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 50, canvas.width / 2, canvas.height / 2, canvas.height * 0.7);
         grad.addColorStop(0, '#1b1641');
