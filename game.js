@@ -43,6 +43,8 @@ const finalScoreEl = document.getElementById('final-score');
 const bestScoreEl = document.getElementById('best-score');
 const gameContainer = document.getElementById('game-container');
 const tutorialToast = document.getElementById('tutorial-toast');
+const countdownOverlay = document.getElementById('countdown-overlay');
+const countdownText = document.getElementById('countdown-text');
 const muteBtn = document.getElementById('mute-btn');
 const feverBanner = document.getElementById('fever-banner');
 const levelValEl = document.getElementById('level-val');
@@ -257,6 +259,49 @@ class SoundManager {
         });
     }
 
+    playCountdownBeep(type) {
+        this.init();
+        if (!this.ctx || this.muted) return;
+        
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        
+        if (type === 'ready') {
+            // Exciting double synth beep
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(587.33, now); // D5
+            osc.frequency.setValueAtTime(880, now + 0.08); // A5
+            gain.gain.setValueAtTime(0.14 * this.sfxVolume, now);
+            gain.gain.linearRampToValueAtTime(0.01 * this.sfxVolume, now + 0.22);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(now + 0.22);
+        } else if (type === 'beep') {
+            // Standard sharp classic countdown beep
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(880, now); // A5
+            gain.gain.setValueAtTime(0.12 * this.sfxVolume, now);
+            gain.gain.linearRampToValueAtTime(0.001 * this.sfxVolume, now + 0.12);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(now + 0.12);
+        } else if (type === 'go') {
+            // High pitch retro go bell
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(1046.50, now); // C6
+            osc.frequency.exponentialRampToValueAtTime(1567.98, now + 0.15); // G6
+            gain.gain.setValueAtTime(0.18 * this.sfxVolume, now);
+            gain.gain.exponentialRampToValueAtTime(0.001 * this.sfxVolume, now + 0.45);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(now + 0.45);
+        }
+    }
+
     playPowerUp() {
         this.init();
         if (!this.ctx || this.muted) return;
@@ -358,6 +403,7 @@ const sounds = new SoundManager();
 // GAME STATE & VARIABLES
 // ==========================================
 let gameActive = false;
+let countdownActive = false;
 let score = 0;
 let combo = 0;
 let ratSizeLevel = 0; // 0: Normal, 1: Fat, 2: Bloated, 3: Exploded
@@ -1956,7 +2002,6 @@ function startNewGame() {
 
     // Spawner timers setup
     spawnInterval = 1300;
-    lastSpawnTime = performance.now();
 
     // Show tutorial toast
     tutorialToast.style.opacity = 1;
@@ -1971,6 +2016,62 @@ function startNewGame() {
     } else {
         sounds.startBgm();
     }
+
+    startCountdownSequence();
+}
+
+function startCountdownSequence() {
+    countdownActive = true;
+    countdownOverlay.classList.add('active');
+    
+    const sequence = ['READY !!', '3', '2', '1', 'GO !!!'];
+    let idx = 0;
+    
+    function runNextStep() {
+        if (!gameActive) {
+            // Player quit or game over triggered early somehow
+            countdownOverlay.classList.remove('active');
+            countdownActive = false;
+            return;
+        }
+        
+        if (idx >= sequence.length) {
+            countdownOverlay.classList.remove('active');
+            countdownActive = false;
+            lastSpawnTime = performance.now();
+            return;
+        }
+        
+        const stepText = sequence[idx];
+        countdownText.innerText = stepText;
+        
+        // Update styling classes
+        countdownText.className = 'countdown-text'; // clear all classes
+        if (stepText === 'READY !!') {
+            countdownText.classList.add('ready');
+            sounds.playCountdownBeep('ready');
+        } else if (stepText === '3') {
+            countdownText.classList.add('three');
+            sounds.playCountdownBeep('beep');
+        } else if (stepText === '2') {
+            countdownText.classList.add('two');
+            sounds.playCountdownBeep('beep');
+        } else if (stepText === '1') {
+            countdownText.classList.add('one');
+            sounds.playCountdownBeep('beep');
+        } else if (stepText === 'GO !!!') {
+            countdownText.classList.add('go');
+            sounds.playCountdownBeep('go');
+            // Start spawning immediately!
+            lastSpawnTime = performance.now();
+        }
+        
+        idx++;
+        const delay = stepText === 'READY !!' ? 850 : 650;
+        setTimeout(runNextStep, delay);
+    }
+    
+    runNextStep();
 }
 
 function triggerGameOver() {
@@ -2698,14 +2799,16 @@ function gameLoop(timestamp) {
         const currentInterval = feverActive ? 220 : (feverCooldownTimer > 0 ? baseInterval * 1.5 : baseInterval);
         
         const now = performance.now();
-        // Do NOT spawn new items if levelUpPauseTimer is active
-        if (now - lastSpawnTime > currentInterval && levelUpPauseTimer <= 0) {
+        // Do NOT spawn new items if levelUpPauseTimer or countdownActive is active
+        if (!countdownActive && now - lastSpawnTime > currentInterval && levelUpPauseTimer <= 0) {
             spawnItem();
             lastSpawnTime = now;
         }
 
         // 3. Update active power-up durations
-        updatePowerUpTimers();
+        if (!countdownActive) {
+            updatePowerUpTimers();
+        }
 
         // 4. Draw fire breath if super chili is active
         drawChiliFireBreath();
@@ -2717,14 +2820,16 @@ function gameLoop(timestamp) {
         });
 
         // 6. Update and Draw items
-        items.forEach(item => {
-            if (item.alpha > 0) {
-                const active = item.update();
-                if (active) {
-                    item.draw();
+        if (!countdownActive) {
+            items.forEach(item => {
+                if (item.alpha > 0) {
+                    const active = item.update();
+                    if (active) {
+                        item.draw();
+                    }
                 }
-            }
-        });
+            });
+        }
 
         // 7. Update and Draw Rat
         rat.update();

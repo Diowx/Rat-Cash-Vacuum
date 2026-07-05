@@ -1417,5 +1417,84 @@ body {
     font-weight: bold;
 }
 
+/* ==========================================
+   🏁 EXCITING COUNTDOWN OVERLAY STYLES
+   ========================================== */
+.countdown-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45); /* slightly dim the board for better contrast */
+    z-index: 45; /* above gameplay objects, below menus */
+    pointer-events: none; /* allow click through if needed */
+}
+
+.countdown-overlay.active {
+    display: flex;
+}
+
+.countdown-text {
+    font-family: 'Outfit', 'Fredoka', sans-serif;
+    font-size: 82px;
+    font-weight: 900;
+    text-transform: uppercase;
+    animation: countdownPulse 0.45s ease-out infinite alternate;
+    transition: all 0.2s ease;
+}
+
+/* Pulsing text size animation */
+@keyframes countdownPulse {
+    0% {
+        transform: scale(0.85);
+        filter: brightness(0.9);
+    }
+    100% {
+        transform: scale(1.15);
+        filter: brightness(1.4);
+    }
+}
+
+/* Colors for each step */
+.countdown-text.ready {
+    color: #ffd700;
+    text-shadow: 0 0 25px #ffd700, 0 0 50px #ff2d85;
+}
+
+.countdown-text.three {
+    color: #00f0ff;
+    text-shadow: 0 0 25px #00f0ff, 0 0 50px #0055ff;
+}
+
+.countdown-text.two {
+    color: #ff7b00;
+    text-shadow: 0 0 25px #ff7b00, 0 0 50px #ff0000;
+}
+
+.countdown-text.one {
+    color: #ff2d85;
+    text-shadow: 0 0 25px #ff2d85, 0 0 55px #990044;
+}
+
+.countdown-text.go {
+    color: #39ff14;
+    font-size: 110px;
+    text-shadow: 0 0 35px #39ff14, 0 0 70px #00aa00;
+    animation: countdownPulseGo 0.3s ease-out infinite alternate;
+}
+
+@keyframes countdownPulseGo {
+    0% {
+        transform: scale(0.9) rotate(-3deg);
+    }
+    100% {
+        transform: scale(1.25) rotate(3deg);
+    }
+}
+
 
 
