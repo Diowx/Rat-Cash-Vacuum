@@ -1841,6 +1841,11 @@ function startNewGame() {
     gameOverScreen.classList.remove('active');
     gameScreen.classList.add('active');
 
+    // Hide banner ad during gameplay
+    if (window.AndroidInterface) {
+        window.AndroidInterface.postMessage("hide_banner");
+    }
+
     // Reset core states
     score = 0;
     combo = 0;
@@ -1909,6 +1914,19 @@ function triggerGameOver() {
         
         finalScoreEl.innerText = score;
         updateHighScoreUI();
+
+        // Show banner ad on Game Over screen
+        if (window.AndroidInterface) {
+            window.AndroidInterface.postMessage("show_banner");
+            
+            // Show Interstitial ad every 3 plays
+            let playCount = parseInt(localStorage.getItem('rat_sucker_playcount') || 0, 10);
+            playCount++;
+            localStorage.setItem('rat_sucker_playcount', playCount);
+            if (playCount % 3 === 0) {
+                window.AndroidInterface.postMessage("show_interstitial");
+            }
+        }
     }, 1200);
 }
 
@@ -1960,6 +1978,11 @@ menuBtn.addEventListener('click', (e) => {
     gameScreen.classList.remove('active');
     startScreen.classList.add('active');
     updateHighScoreUI();
+
+    // Ensure banner is shown on Start screen
+    if (window.AndroidInterface) {
+        window.AndroidInterface.postMessage("show_banner");
+    }
 });
 
 // Help modal clicks
@@ -2252,3 +2275,8 @@ function gameLoop(timestamp) {
 
 // Start Game Loop
 requestAnimationFrame(gameLoop);
+
+// Show initial banner ad on startup if running in Android app
+if (window.AndroidInterface) {
+    window.AndroidInterface.postMessage("show_banner");
+}
