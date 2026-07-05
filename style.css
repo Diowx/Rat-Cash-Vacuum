@@ -1498,5 +1498,9 @@ body {
     }
 }
 
+#start-btn {
+    margin-top: 22px !important; /* Shift start button down to avoid overlapping the skin selector */
+}
+
 
 
