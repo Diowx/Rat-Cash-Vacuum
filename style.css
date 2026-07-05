@@ -109,7 +109,7 @@ body {
     background: radial-gradient(circle at center, #1b133d 0%, #0d0925 100%);
     justify-content: center;
     gap: 8px;
-    padding: 16px 20px 10px 20px;
+    padding: 16px 20px 75px 20px;
 }
 
 .logo-container {
@@ -394,6 +394,7 @@ body {
     backdrop-filter: blur(15px);
     justify-content: center;
     gap: 15px;
+    padding: 40px 30px 85px 30px;
 }
 
 .explosion-emoji {
@@ -946,7 +947,7 @@ body {
 #intro-screen {
     background: radial-gradient(circle at center, #1b0e35 0%, #060212 100%);
     z-index: 100; /* Ensure it floats on top of everything */
-    padding: 40px 20px 20px 20px;
+    padding: 40px 20px 75px 20px; /* Shift elements up to avoid AdMob banner */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
